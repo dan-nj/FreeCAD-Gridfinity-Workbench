@@ -1,19 +1,15 @@
-
 PROPERTY_TYPE_BOOLEAN = "App::PropertyBool"
 
 PROPERTY_SECTION_MAIN = "Gridfinity"
 PROPERTY_SECTION_NON_STANDARD = "GridfinityNonStandard"
 PROPERTY_SECTION_REFERENCE = "ReferenceParameters"
 
-BOOLEAN_PROPERTY_TYPE = "App::PropertyBool"
+AUTO_ADDED_PROPERTY_DESCRIPTION = "Automatically added for compatibility."
 
 property_defaults = {
     "MagnetRemoveChannel": (False, PROPERTY_TYPE_BOOLEAN, PROPERTY_SECTION_NON_STANDARD),
     "StackingLipThinStyle": (False, PROPERTY_TYPE_BOOLEAN, PROPERTY_SECTION_MAIN)
 }
-
-AUTO_ADDED_SECTION_NAME = "Auto Upgraded Properties"
-AUTO_ADDED_PROPERTY_DESCRIPTION = "Automatically added for forward compatibility."
 
 import FreeCAD as fc
 from typing import Any
