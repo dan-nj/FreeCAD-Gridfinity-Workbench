@@ -14,7 +14,7 @@ property_defaults = {
 import FreeCAD as fc
 from typing import Any
 
-def get_property(obj: fc.DocumentObject, property_name: str) -> Any:
+def get(obj: fc.DocumentObject, property_name: str) -> Any:
     if hasattr(obj, property_name):
         return getattr(obj, property_name)
     elif property_name not in property_defaults:

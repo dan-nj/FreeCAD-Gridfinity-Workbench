@@ -1143,7 +1143,7 @@ def make_bin_bottom_holes(
     y_pos = obj.yGridSize / 2 - obj.MagnetHoleDistanceFromEdge
     shape = utils.copy_and_translate(shape, utils.corners(x_pos, y_pos, -obj.TotalHeight))
 
-    if obj.MagnetHoles and properties.get_property(obj, "MagnetRemoveChannel"):
+    if obj.MagnetHoles and properties.get(obj, "MagnetRemoveChannel"):
         remove_channel = magnet_hole_module.remove_channel(obj).translate(
             fc.Vector(0, 0, -obj.TotalHeight),
         )
@@ -1205,7 +1205,7 @@ def _stacking_lip_profile(obj: fc.DocumentObject) -> Part.Wire:
         fc.Vector(x5, y, z5),
         fc.Vector(x1, y, z5),
     ]
-    if properties.get_property(obj, "StackingLipThinStyle"):
+    if properties.get(obj, "StackingLipThinStyle"):
         st[4:] = [  # Modify the bottom section of the stacking lip profile
             fc.Vector(x3, y, 0),
             fc.Vector(x5, y, -abs(x5.Value - x3.Value)),  # 45 degree chamfer under the lip
