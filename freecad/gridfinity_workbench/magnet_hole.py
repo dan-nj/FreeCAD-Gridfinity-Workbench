@@ -170,7 +170,6 @@ def from_obj(obj: fc.DocumentObject) -> Part.Shape:
     hole_shape = obj.MagnetHolesShape
     radius = obj.MagnetHoleDiameter / 2
     depth = obj.MagnetHoleDepth
-    # chamfer_depth = obj.MagnetHoleChamfer if hasattr(obj, "MagnetHoleChamfer") else None
     chamfer_depth = properties.get(obj, "MagnetHoleChamfer")
 
     if hole_shape == "Hex":
