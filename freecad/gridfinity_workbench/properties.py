@@ -1,4 +1,5 @@
 PROPERTY_TYPE_BOOLEAN = "App::PropertyBool"
+PROPERTY_TYPE_DISTANCE = "App::PropertyDistance"
 
 PROPERTY_SECTION_MAIN = "Gridfinity"
 PROPERTY_SECTION_NON_STANDARD = "GridfinityNonStandard"
@@ -6,13 +7,14 @@ PROPERTY_SECTION_REFERENCE = "ReferenceParameters"
 
 AUTO_ADDED_PROPERTY_DESCRIPTION = "Automatically added for compatibility."
 
-property_defaults = {
-    "MagnetRemoveChannel": (False, PROPERTY_TYPE_BOOLEAN, PROPERTY_SECTION_NON_STANDARD),
-    "StackingLipThinStyle": (False, PROPERTY_TYPE_BOOLEAN, PROPERTY_SECTION_MAIN)
-}
-
 import FreeCAD as fc
 from typing import Any
+
+property_defaults = {
+    "MagnetHoleChamfer": (fc.Units.Quantity("0.25 mm"), PROPERTY_TYPE_DISTANCE, PROPERTY_SECTION_NON_STANDARD),
+    "MagnetRemoveChannel": (False, PROPERTY_TYPE_BOOLEAN, PROPERTY_SECTION_NON_STANDARD),
+    "StackingLipThinStyle": (False, PROPERTY_TYPE_BOOLEAN, PROPERTY_SECTION_MAIN),
+}
 
 def get(obj: fc.DocumentObject, property_name: str) -> Any:
     if hasattr(obj, property_name):
