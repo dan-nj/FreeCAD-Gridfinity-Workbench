@@ -100,6 +100,7 @@ class FullBin(FoundationGridfinity):
 
     def generate_gridfinity_shape(self, obj: fc.DocumentObject) -> Part.Shape:
         layout = grid_initial_layout.make_rectangle_layout(obj)
+        enlarge_recessed_top = True
 
         bin_outside_shape = utils.create_rounded_rectangle(
             obj.xTotalWidth,
@@ -111,11 +112,24 @@ class FullBin(FoundationGridfinity):
             fc.Vector(obj.xTotalWidth / 2 + obj.Clearance, obj.yTotalWidth / 2 + obj.Clearance),
         )
 
+        inside_shape_x_width = obj.xTotalWidth - obj.WallThickness * 2
+        inside_shape_y_width = obj.yTotalWidth - obj.WallThickness * 2
+        bin_outer_radius = obj.BinOuterRadius - obj.WallThickness
+        if enlarge_recessed_top:
+            inside_shape_x_width -= fc.Units.Quantity("0.9mm") * 2
+            inside_shape_y_width -= fc.Units.Quantity("0.9mm") * 2
+            bin_outer_radius -= fc.Units.Quantity("0.9mm")
+        else:
+            bin_outer_radius = obj.BinOuterRadius - obj.WallThickness
+
         bin_inside_shape = utils.create_rounded_rectangle(
-            obj.xTotalWidth - obj.WallThickness * 2,
-            obj.yTotalWidth - obj.WallThickness * 2,
+            # obj.xTotalWidth - obj.WallThickness * 2,
+            inside_shape_x_width,
+            # obj.yTotalWidth - obj.WallThickness * 2,
+            inside_shape_y_width,
             0,
-            obj.BinOuterRadius - obj.WallThickness,
+            # obj.BinOuterRadius - obj.WallThickness,
+            bin_outer_radius
         )
         bin_inside_shape.translate(
             fc.Vector(obj.xTotalWidth / 2 + obj.Clearance, obj.yTotalWidth / 2 + obj.Clearance),
