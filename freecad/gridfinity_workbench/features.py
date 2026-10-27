@@ -150,7 +150,7 @@ class FullBin(FoundationGridfinity):
         if obj.ScrewHoles or obj.MagnetHoles:
             fuse_total = fuse_total.cut(feat.make_bin_bottom_holes(obj, layout))
 
-        # merge faces to clean up continuous walls
+        # merge faces to clean up outer and inner wall surfaces
         fuse_total = fuse_total.removeSplitter()
 
         return fuse_total
