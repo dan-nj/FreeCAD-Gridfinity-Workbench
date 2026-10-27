@@ -117,10 +117,13 @@ class FullBin(FoundationGridfinity):
 
         recessed_thick_wall = hasattr(obj, "RecessedTopThickWall") and getattr(obj, "RecessedTopThickWall")
         if recessed_thick_wall:
-            # TODO: Only works correctly with thin stacking lip style enabled.
             stacking_lip_top_chamfer = obj.BaseProfileTopChamfer - obj.Clearance - obj.StackingLipTopLedge
-            # adjustment distance required is 0.9mm with default values
+            # adjustment distance required is 0.9mm for a stacking lip thin style, assuming default values
             thick_wall_adjustment_distance = obj.StackingLipTopLedge + stacking_lip_top_chamfer - obj.WallThickness
+            # adjustment distance is greater by the stacking lip bottom chamfer distance for the stacking lip thick style
+            if not hasattr(obj, "StackingLipThinStyle") or not getattr(obj, "StackingLipThinStyle"):
+                thick_wall_adjustment_distance += obj.StackingLipBottomChamfer
+
             inside_shape_x_width -= thick_wall_adjustment_distance * 2
             inside_shape_y_width -= thick_wall_adjustment_distance * 2
             bin_outer_radius -= thick_wall_adjustment_distance
@@ -147,9 +150,8 @@ class FullBin(FoundationGridfinity):
         if obj.ScrewHoles or obj.MagnetHoles:
             fuse_total = fuse_total.cut(feat.make_bin_bottom_holes(obj, layout))
 
-        # merge faces to create continuous interior walls if a thick wall was specified
-        if recessed_thick_wall:
-            fuse_total = fuse_total.removeSplitter()
+        # merge faces to clean up continuous walls
+        fuse_total = fuse_total.removeSplitter()
 
         return fuse_total
 
