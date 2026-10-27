@@ -1032,6 +1032,11 @@ def blank_bin_recessed_top_properties(obj: fc.DocumentObject) -> None:
         const.SECTION_NAME_NON_STANDARD,
         "height per unit <br> <br> default = 0 mm",
     ).RecessedTopDepth = const.RECESSED_TOP_DEPTH
+    obj.addProperty(
+        "App::PropertyBool",
+        "RecessedTopThickWall",
+        "GridfinityNonStandard"
+    ).RecessedTopThickWall = False
 
 
 def make_blank_bin_recessed_top(obj: fc.DocumentObject, bin_inside_shape: Part.Wire) -> Part.Shape:
