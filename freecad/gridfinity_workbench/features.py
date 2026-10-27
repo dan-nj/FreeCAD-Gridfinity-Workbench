@@ -100,7 +100,6 @@ class FullBin(FoundationGridfinity):
 
     def generate_gridfinity_shape(self, obj: fc.DocumentObject) -> Part.Shape:
         layout = grid_initial_layout.make_rectangle_layout(obj)
-        enlarge_recessed_top = True
 
         bin_outside_shape = utils.create_rounded_rectangle(
             obj.xTotalWidth,
@@ -115,20 +114,21 @@ class FullBin(FoundationGridfinity):
         inside_shape_x_width = obj.xTotalWidth - obj.WallThickness * 2
         inside_shape_y_width = obj.yTotalWidth - obj.WallThickness * 2
         bin_outer_radius = obj.BinOuterRadius - obj.WallThickness
-        if enlarge_recessed_top:
-            inside_shape_x_width -= fc.Units.Quantity("0.9mm") * 2
-            inside_shape_y_width -= fc.Units.Quantity("0.9mm") * 2
-            bin_outer_radius -= fc.Units.Quantity("0.9mm")
-        else:
-            bin_outer_radius = obj.BinOuterRadius - obj.WallThickness
+
+        recessed_thick_wall = hasattr(obj, "RecessedTopThickWall") and getattr(obj, "RecessedTopThickWall")
+        if recessed_thick_wall:
+            # TODO: Only works correctly with thin stacking lip style enabled.
+            stacking_lip_top_chamfer = obj.BaseProfileTopChamfer - obj.Clearance - obj.StackingLipTopLedge
+            # adjustment distance required is 0.9mm with default values
+            thick_wall_adjustment_distance = obj.StackingLipTopLedge + stacking_lip_top_chamfer - obj.WallThickness
+            inside_shape_x_width -= thick_wall_adjustment_distance * 2
+            inside_shape_y_width -= thick_wall_adjustment_distance * 2
+            bin_outer_radius -= thick_wall_adjustment_distance
 
         bin_inside_shape = utils.create_rounded_rectangle(
-            # obj.xTotalWidth - obj.WallThickness * 2,
             inside_shape_x_width,
-            # obj.yTotalWidth - obj.WallThickness * 2,
             inside_shape_y_width,
             0,
-            # obj.BinOuterRadius - obj.WallThickness,
             bin_outer_radius
         )
         bin_inside_shape.translate(
@@ -146,6 +146,10 @@ class FullBin(FoundationGridfinity):
 
         if obj.ScrewHoles or obj.MagnetHoles:
             fuse_total = fuse_total.cut(feat.make_bin_bottom_holes(obj, layout))
+
+        # merge faces to create continuous interior walls if a thick wall was specified
+        if recessed_thick_wall:
+            fuse_total = fuse_total.removeSplitter()
 
         return fuse_total
 
